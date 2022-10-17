@@ -5,17 +5,20 @@ use serenity::{prelude::GatewayIntents, Client as DiscordClient};
 ///
 /// # Example
 /// ```rust,no_run
+/// # async fn run() {
 /// use yorokobot::client::{Client, ClientCredentials};
 ///
-/// let discord_token = "Your discord token";
+/// let token = String::from("Your discord token");
 ///
 /// let credentials = ClientCredentials {
-///     discord_token,
+///     discord_token: &token,
 /// };
 ///
-/// let client = Client::new(credentials);
+/// let mut client = Client::new(credentials).await;
 ///
-/// client.connect().await
+/// client.connect().await;
+///
+/// # }
 /// ```
 ///
 pub struct Client {

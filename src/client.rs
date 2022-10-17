@@ -17,7 +17,7 @@ impl<'a> Client {
         Client { discord_client }
     }
 
-    pub async fn connect_discord(&mut self) -> () {
+    pub async fn connect_discord(&mut self) {
         if let Err(error) = self.discord_client.start().await {
             println!("Could not connect to Discord: {:?}", error);
         }

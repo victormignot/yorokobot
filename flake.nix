@@ -30,6 +30,12 @@
             rust-analyzer
             rustfmt
           ];
+
+          shellHook = ''
+            set -a
+            source .env
+            set +a
+          '';
         };  
       }
     );

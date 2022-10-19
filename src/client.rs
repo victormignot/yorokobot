@@ -75,7 +75,7 @@ impl<'a> Client {
     pub async fn connect_discord(&mut self) -> Result<(), ClientsError> {
         match self.discord_client.start().await {
             Ok(_) => Ok(()),
-            Err(e) => return Err(ClientsError::Discord(e)),
+            Err(e) => Err(ClientsError::Discord(e)),
         }
     }
 

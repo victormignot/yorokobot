@@ -6,5 +6,6 @@
 #![deny(missing_docs)]
 #![deny(warnings)]
 
-/// Module containing the Yorokobot client and used structs
 pub mod client;
+
+pub mod errors;

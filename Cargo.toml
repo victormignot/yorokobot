@@ -10,4 +10,5 @@ serenity = { version="0.11", default-features = false, features = ["client", "ga
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
 mongodb = "2.3.0"
 serde = { version = "1.0", features = [ "derive" ] }
-log4rs = "1.2.0"
+log4rs = { version = "1.2.0", features = [ "console_appender", "rolling_file_appender", "compound_policy", "fixed_window_roller", "size_trigger", "gzip", "background_rotation" ] }
+log = "0.4.17"

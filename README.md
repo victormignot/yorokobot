@@ -32,7 +32,7 @@ each server member to ping someone.
 ## What if I want to block someone to use the bot on my server specifically ?
 
 Each server will have a ban list at its disposition.
-Server admins will be able to block someone for using the bot on their server.
+Server admins will be able to ban someone to use the bot on their server.
 
 ## Is there a global banlist ?
 

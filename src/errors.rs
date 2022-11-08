@@ -1,14 +1,14 @@
 //! Common Yorokobot errors
 
-use mongodb::error::Error as MongoError;
-use serenity::prelude::SerenityError;
+pub use mongodb::error::Error as DatabaseError;
+pub use serenity::prelude::SerenityError as DiscordError;
 
 /// The kind of errors that can be returned by Client::new
 #[derive(Debug)]
-pub enum ClientsError {
+pub enum ClientError {
     /// Serenity error while building client
-    Discord(SerenityError),
+    Discord(DiscordError),
 
     ///Mongo error while parsing options
-    Database(MongoError),
+    Database(DatabaseError),
 }

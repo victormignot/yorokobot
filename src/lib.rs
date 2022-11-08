@@ -6,6 +6,11 @@
 #![deny(missing_docs)]
 #![deny(warnings)]
 
-pub mod client;
-
+mod client;
+mod database;
 pub mod errors;
+
+pub use crate::{
+    client::{Client, ClientCredentials},
+    database::DatabaseCredentials,
+};

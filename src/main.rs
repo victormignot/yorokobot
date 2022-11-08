@@ -1,10 +1,7 @@
 use log::error;
 use std::env;
 
-use yorokobot::{
-    client::{Client, ClientCredentials},
-    errors::ClientsError,
-};
+use yorokobot::{errors::ClientError, Client, ClientCredentials, DatabaseCredentials};
 
 #[tokio::main]
 async fn main() -> std::process::ExitCode {
@@ -27,9 +24,17 @@ async fn main() -> std::process::ExitCode {
         }
     };
 
+    let db_credentials = match DatabaseCredentials::parse(mongodb_uri).await {
+        Ok(c) => c,
+        Err(_) => {
+            error!(target: "bot_warn_errors", "Could not parse database credentials.");
+            return std::process::ExitCode::FAILURE;
+        }
+    };
+
     let credentials = ClientCredentials {
         discord_token: &discord_token,
-        mongo_uri: &mongodb_uri,
+        db_credentials: &db_credentials,
     };
 
     let mut client = match Client::new(credentials).await {
@@ -42,10 +47,10 @@ async fn main() -> std::process::ExitCode {
 
     if let Err(error) = client.connect().await {
         match error {
-            ClientsError::Database(e) => {
+            ClientError::Database(e) => {
                 error!(target: "bot_warn_errors", "Could not connect to database: {:?}", e)
             }
-            ClientsError::Discord(e) => {
+            ClientError::Discord(e) => {
                 error!(target: "bot_warn_errors", "Could not connect to Discord: {:?}", e)
             }
         };

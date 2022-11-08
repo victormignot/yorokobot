@@ -1,8 +1,7 @@
 //! Module containing the Yorokobot client and used structs
 
-use crate::errors::ClientsError;
+use crate::{database::Client as DatabaseClient, errors::ClientError, DatabaseCredentials};
 
-use mongodb::{options::ClientOptions as MongoClientOptions, Client as MongoClient};
 use serenity::{prelude::GatewayIntents, Client as DiscordClient};
 
 /// Yorokobot's client.
@@ -27,15 +26,12 @@ use serenity::{prelude::GatewayIntents, Client as DiscordClient};
 ///
 /// # }
 /// ```
-pub struct Client {
+pub struct Client<'a> {
     /// The Serenity Discord Client
     discord_client: DiscordClient,
 
-    /// The MongoDB Client
-    mongodb_client: Option<MongoClient>,
-
-    /// MongoDB Client Options
-    mongodb_options: MongoClientOptions,
+    /// The database client
+    database_client: DatabaseClient<'a>,
 }
 
 /// Yorokobot connection credentials
@@ -44,12 +40,12 @@ pub struct ClientCredentials<'a> {
     pub discord_token: &'a String,
 
     /// MongoDB connection string.
-    pub mongo_uri: &'a String,
+    pub db_credentials: &'a DatabaseCredentials,
 }
 
-impl<'a> Client {
+impl<'a> Client<'a> {
     /// Create a Yorokobot client
-    pub async fn new(credentials: ClientCredentials<'a>) -> Result<Self, ClientsError> {
+    pub async fn new(credentials: ClientCredentials<'a>) -> Result<Client, ClientError> {
         let discord_client = match DiscordClient::builder(
             credentials.discord_token,
             GatewayIntents::empty(),
@@ -57,43 +53,29 @@ impl<'a> Client {
         .await
         {
             Ok(c) => c,
-            Err(e) => return Err(ClientsError::Discord(e)),
+            Err(e) => return Err(ClientError::Discord(e)),
         };
 
-        let mongodb_options = match MongoClientOptions::parse(credentials.mongo_uri).await {
-            Ok(o) => o,
-            Err(e) => return Err(ClientsError::Database(e)),
-        };
+        let database_client = DatabaseClient::new(credentials.db_credentials);
 
         Ok(Client {
             discord_client,
-            mongodb_options,
-            mongodb_client: None,
+            database_client,
         })
     }
 
     /// Start connection to Discord API.
     /// Wrap [`serenity::client::Client`] start method.
-    pub async fn connect_discord(&mut self) -> Result<(), ClientsError> {
+    pub async fn connect_discord(&mut self) -> Result<(), ClientError> {
         match self.discord_client.start().await {
             Ok(_) => Ok(()),
-            Err(e) => Err(ClientsError::Discord(e)),
+            Err(e) => Err(ClientError::Discord(e)),
         }
     }
 
-    /// Connect to the Mongo Database
-    pub fn connect_mongodb(&mut self) -> Result<(), ClientsError> {
-        self.mongodb_client = match MongoClient::with_options(self.mongodb_options.clone()) {
-            Ok(c) => Some(c),
-            Err(e) => return Err(ClientsError::Database(e)),
-        };
-
-        Ok(())
-    }
-
     /// Connect client to the Mongo database then to the Discord API.
-    pub async fn connect(&mut self) -> Result<(), ClientsError> {
-        self.connect_mongodb()?;
+    pub async fn connect(&mut self) -> Result<(), ClientError> {
+        self.database_client.connect().await?;
         self.connect_discord().await?;
 
         Ok(())

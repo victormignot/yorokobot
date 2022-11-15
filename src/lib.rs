@@ -8,6 +8,7 @@
 
 mod client;
 mod database;
+mod environment;
 pub mod errors;
 
 pub use crate::{

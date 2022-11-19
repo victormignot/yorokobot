@@ -29,6 +29,7 @@
           packages = with pkgs; [
             rust-analyzer
             rustfmt
+            gdb
           ];
 
           shellHook = ''

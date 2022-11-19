@@ -4,7 +4,7 @@ use log::error;
 use std::env;
 
 /// Get the environment variiable var_name or panic
-pub fn get_env_variable(var_name: &String) -> String {
+pub fn get_env_variable(var_name: &str) -> String {
     match env::var(var_name) {
         Ok(v) => v,
         Err(_) => {

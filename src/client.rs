@@ -26,12 +26,12 @@ use serenity::{prelude::GatewayIntents, Client as DiscordClient};
 ///
 /// # }
 /// ```
-pub struct Client<'a> {
+pub struct Client {
     /// The Serenity Discord Client
     discord_client: DiscordClient,
 
     /// The database client
-    database_client: DatabaseClient<'a>,
+    database_client: DatabaseClient,
 }
 
 /// Yorokobot connection credentials
@@ -40,10 +40,10 @@ pub struct ClientCredentials<'a> {
     pub discord_token: &'a String,
 
     /// MongoDB connection string.
-    pub db_credentials: &'a DatabaseCredentials,
+    pub db_credentials: DatabaseCredentials,
 }
 
-impl<'a> Client<'a> {
+impl<'a> Client {
     /// Create a Yorokobot client
     pub async fn new(credentials: ClientCredentials<'a>) -> Result<Client, ClientError> {
         let discord_client = match DiscordClient::builder(

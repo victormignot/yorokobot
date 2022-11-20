@@ -4,13 +4,10 @@
 
 use serde::{Deserialize, Serialize};
 
-/// All the models within Mongo COllections
-pub enum CollectionModels {
-    /// Discord Guild
-    Guild(Guild),
+pub const COLLECTIONS_NAMES: [&str; 2] = ["guilds", "tags"];
 
-    /// Yorokobot tags
-    Tag(Tag),
+pub trait YorokobotModel {
+    fn get_collection_name() -> String;
 }
 
 /// Settings for a server
@@ -34,4 +31,15 @@ pub struct Tag {
     guild: String,
     is_nsfw: bool,
     subscribers: Vec<String>,
+}
+
+impl YorokobotModel for Guild {
+    fn get_collection_name() -> String {
+        return "guilds".to_string();
+    }
+}
+impl YorokobotModel for Tag {
+    fn get_collection_name() -> String {
+        return "traits".to_string();
+    }
 }

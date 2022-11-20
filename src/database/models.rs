@@ -35,11 +35,11 @@ pub struct Tag {
 
 impl YorokobotModel for Guild {
     fn get_collection_name() -> String {
-        return "guilds".to_string();
+        "guilds".to_string()
     }
 }
 impl YorokobotModel for Tag {
     fn get_collection_name() -> String {
-        return "traits".to_string();
+        "traits".to_string()
     }
 }

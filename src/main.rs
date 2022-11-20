@@ -34,7 +34,7 @@ async fn main() -> std::process::ExitCode {
 
     let credentials = ClientCredentials {
         discord_token: &discord_token,
-        db_credentials: db_credentials,
+        db_credentials,
     };
 
     let mut client = match Client::new(credentials).await {

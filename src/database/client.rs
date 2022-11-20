@@ -23,11 +23,11 @@ pub struct Client {
 impl Client {
     /// Create a new database client
     pub fn new(credentials: DatabaseCredentials) -> Client {
-        return Client {
+        Client {
             credentials,
             mongo_client: None,
             database: None,
-        };
+        }
     }
 
     /// Connect the client
@@ -76,7 +76,7 @@ impl Client {
             }
         }
 
-        if missing_collections.len() != 0 {
+        if !missing_collections.is_empty() {
             panic!(
                 "Missing the following the following collections: {}",
                 missing_collections.join(", ")
@@ -115,7 +115,7 @@ impl Client {
             .expect("Could not issue request")
             .expect("Could not find matching data");
 
-        return from_bson(Bson::Document(result)).expect("Could not deserialize data");
+        from_bson(Bson::Document(result)).expect("Could not deserialize data")
     }
 
     #[allow(dead_code)]

@@ -2,6 +2,7 @@
 
 #![allow(dead_code)]
 
+use mongodb::bson::oid::ObjectId;
 use serde::{Deserialize, Serialize};
 
 pub const COLLECTIONS_NAMES: [&str; 2] = ["guilds", "tags"];
@@ -20,6 +21,8 @@ pub struct GuildSettings {
 /// Server infos
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Guild {
+    #[serde(rename = "_id", skip_serializing_if = "Option::is_none")]
+    id: Option<ObjectId>,
     discord_guild_id: String,
     bot_settings: GuildSettings,
 }
@@ -27,6 +30,8 @@ pub struct Guild {
 /// Tags
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Tag {
+    #[serde(rename = "_id", skip_serializing_if = "Option::is_none")]
+    id: Option<ObjectId>,
     name: String,
     guild: String,
     is_nsfw: bool,

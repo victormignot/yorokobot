@@ -10,14 +10,15 @@ use serenity::{prelude::GatewayIntents, Client as DiscordClient};
 /// # Example
 /// ```rust,no_run
 /// # async fn run() {
-/// use yorokobot::client::{Client, ClientCredentials};
+/// use yorokobot::{Client, ClientCredentials, DatabaseCredentials};
 ///
 /// let discord_token = String::from("Your discord token");
 /// let mongo_uri = String::from("Your Mongo URI");
 ///
 /// let credentials = ClientCredentials {
 ///     discord_token: &discord_token,
-///     mongo_uri: &mongo_uri,
+///     db_credentials: DatabaseCredentials::parse(mongo_uri).await.expect("Failed parsing
+///     credentials"),
 /// };
 ///
 /// let mut client = Client::new(credentials).await.expect("Error creating client");
